@@ -3,59 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 赛事精选面板</title>
+    <title>体彩竞彩 AI 稳胆中心</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background: #f1f5f9; color: #1e293b; font-family: "Microsoft YaHei", sans-serif; }
-        .match-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .prediction-row { border-bottom: 1px solid #f1f5f9; padding: 12px 0; }
-        .prediction-row:last-child { border-bottom: none; }
-        .tag-win { background: #fee2e2; color: #ef4444; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
-        .tag-score { background: #e0f2fe; color: #0ea5e9; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
-    </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-2xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-xl font-bold text-slate-800">📊 AI 今日稳胆推荐</h1>
-            <span id="date-display" class="text-xs text-slate-500 font-mono">SYNCING...</span>
+<body class="bg-gray-50 p-4 md:p-8 font-sans">
+    <div class="max-w-3xl mx-auto">
+        <div class="flex items-center justify-between mb-6 border-b-2 border-red-600 pb-2">
+            <h1 class="text-2xl font-black text-red-600">⚽ 今日竞彩 AI 核心推荐</h1>
+            <span id="date-display" class="text-gray-400 text-xs font-mono"></span>
         </div>
+        
+        <div id="list-container" class="space-y-4">
+            </div>
 
-        <div class="match-card p-6 mb-6 text-center border-b-4 border-blue-500">
-            <div class="text-xs text-blue-500 font-bold tracking-widest mb-2 uppercase">焦点赛事</div>
-            <div id="match-display" class="text-2xl font-black text-slate-900">正在获取盘口...</div>
-        </div>
-
-        <div class="match-card p-4 space-y-2">
-            <div id="predictions-display">
-                </div>
-        </div>
-
-        <div class="mt-6 text-center text-xs text-slate-400">
-            数据由多模态 AI 模型实时计算，仅供参考
+        <div class="mt-8 text-center text-gray-400 text-xs">
+            聚合 500网/澳客网 实时数据 + GPT-5.2 多模型算法
         </div>
     </div>
 
     <script>
         fetch('data.json').then(r => r.json()).then(d => {
             document.getElementById('date-display').innerText = d.date;
-            document.getElementById('match-display').innerText = d.match;
-            
-            const box = document.getElementById('predictions-display');
-            box.innerHTML = '';
-            
+            const container = document.getElementById('list-container');
+            container.innerHTML = '';
             d.predictions.forEach(p => {
-                // 自动提取比分和结果的逻辑（假设AI按格式输出）
-                box.innerHTML += `
-                <div class="prediction-row">
-                    <div class="flex items-center space-x-3 mb-2">
-                        <span class="text-sm font-bold text-slate-700">${p.engine.split(' ')[0]}</span>
-                    </div>
-                    <div class="bg-slate-50 p-3 rounded-lg text-sm leading-relaxed text-slate-600">
-                        ${p.text.replace(/\n/g, '<br>')}
+                container.innerHTML += `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                    <div class="text-sm font-bold text-blue-600 mb-2 uppercase tracking-tight">${p.match.split(':')[0]}</div>
+                    <div class="text-xl font-black text-gray-900 mb-4">${p.match.split(':')[1]}</div>
+                    <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+                        <div class="text-gray-700 leading-relaxed text-sm whitespace-pre-wrap">${p.text}</div>
                     </div>
                 </div>`;
             });
+        }).catch(e => {
+            document.getElementById('list-container').innerHTML = '<p class="text-center py-10 text-gray-400">正在努力抓取竞彩赛事中，请稍后...</p>';
         });
     </script>
 </body>
