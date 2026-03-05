@@ -1,0 +1,10 @@
+{
+    "date": "2026-03-05 00:32",
+    "match": "竞彩焦点赛事: 皇家马德里 VS 拜仁慕尼黑 (兜底测试)",
+    "predictions": [
+        {
+            "engine": "ALGO-MATRIX // 聚合统计算法引擎",
+            "text": "<span class=\"text-emerald-400 font-bold\">【竞彩推荐】</span>：(主胜)  <br><br><span class=\"text-sky-400 font-bold\">【比分预测】</span>：(2:1)  <br><br><span class=\"text-purple-400 font-bold\">【算法理由】</span>：(历史交锋整体胜负接近但多为小分差，叠加主场优势与长期Elo强度对皇马略倾斜；泊松进球期望两队均有进球，主队边际优势落在1球区间。)"
+        }
+    ]
+}
