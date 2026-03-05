@@ -3,65 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 聚合赛事分析矩阵</title>
+    <title>AI 赛事精选面板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #050b14; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; }
-        .glass { background: rgba(16, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
-        .glow-text { text-shadow: 0 0 10px currentColor; }
+        body { background: #f1f5f9; color: #1e293b; font-family: "Microsoft YaHei", sans-serif; }
+        .match-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .prediction-row { border-bottom: 1px solid #f1f5f9; padding: 12px 0; }
+        .prediction-row:last-child { border-bottom: none; }
+        .tag-win { background: #fee2e2; color: #ef4444; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+        .tag-score { background: #e0f2fe; color: #0ea5e9; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
-<body class="min-h-screen p-3 md:p-6">
-    <div class="max-w-4xl mx-auto space-y-6">
-        
-        <header class="text-center py-6 glass rounded-xl border-t-4 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
-            <h1 class="text-2xl md:text-3xl font-black text-white tracking-widest">
-                <span class="text-red-500 glow-text">SUPER</span> AI SYNDICATE
-            </h1>
-            <p id="date-display" class="mt-2 text-slate-400 text-xs tracking-widest">SYSTEM ONLINE // FETCHING DATA...</p>
-        </header>
-
-        <div class="glass rounded-xl p-5 relative overflow-hidden border-l-4 border-emerald-500">
-            <h2 class="text-xs text-emerald-500 font-bold tracking-widest mb-2 glow-text">TARGET ACQUIRED</h2>
-            <p id="match-display" class="text-lg md:text-xl font-bold text-white tracking-wide">WAITING FOR INJECTION...</p>
+<body class="p-4 md:p-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-xl font-bold text-slate-800">📊 AI 今日稳胆推荐</h1>
+            <span id="date-display" class="text-xs text-slate-500 font-mono">SYNCING...</span>
         </div>
 
-        <div id="predictions-display" class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            </div>
-        
+        <div class="match-card p-6 mb-6 text-center border-b-4 border-blue-500">
+            <div class="text-xs text-blue-500 font-bold tracking-widest mb-2 uppercase">焦点赛事</div>
+            <div id="match-display" class="text-2xl font-black text-slate-900">正在获取盘口...</div>
+        </div>
+
+        <div class="match-card p-4 space-y-2">
+            <div id="predictions-display">
+                </div>
+        </div>
+
+        <div class="mt-6 text-center text-xs text-slate-400">
+            数据由多模态 AI 模型实时计算，仅供参考
+        </div>
     </div>
 
     <script>
         fetch('data.json').then(r => r.json()).then(d => {
-            document.getElementById('date-display').innerText = 'LAST SYNC: ' + d.date;
+            document.getElementById('date-display').innerText = d.date;
             document.getElementById('match-display').innerText = d.match;
             
             const box = document.getElementById('predictions-display');
             box.innerHTML = '';
             
-            // 为不同模型定义专属主题色
-            const themes = [
-                { color: 'text-sky-400', border: 'border-sky-500', bg: 'bg-sky-500' },     // 泊松
-                { color: 'text-purple-400', border: 'border-purple-500', bg: 'bg-purple-500' }, // Elo
-                { color: 'text-amber-400', border: 'border-amber-500', bg: 'bg-amber-500' }    // 凯利
-            ];
-
-            d.predictions.forEach((p, index) => {
-                const t = themes[index % 3];
-                // 将大模型输出的换行符替换为网页可见的换行
-                const formattedText = p.text.replace(/\n/g, '<br><span class="opacity-50">|</span> ');
-                
+            d.predictions.forEach(p => {
+                // 自动提取比分和结果的逻辑（假设AI按格式输出）
                 box.innerHTML += `
-                <div class="glass rounded-xl p-5 relative border-t-2 ${t.border} hover:-translate-y-1 transition-transform duration-300">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 ${t.bg} shadow-[0_0_10px_currentColor]"></div>
-                    <h3 class="font-bold text-sm ${t.color} mb-3 pb-2 border-b border-slate-700 glow-text tracking-wider">
-                        ${p.engine}
-                    </h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">${formattedText}</p>
+                <div class="prediction-row">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <span class="text-sm font-bold text-slate-700">${p.engine.split(' ')[0]}</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg text-sm leading-relaxed text-slate-600">
+                        ${p.text.replace(/\n/g, '<br>')}
+                    </div>
                 </div>`;
             });
-        }).catch(e => {
-            document.getElementById('match-display').innerText = 'ERROR: DATA NOT FOUND';
         });
     </script>
 </body>
